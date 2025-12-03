@@ -1,10 +1,3 @@
-// "use client";
-
-// import { supabase } from "@/app/supabaseClient";
-// import { useState } from "react";
-
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
 import { IMAGE } from "@/app/constants/images";
 
 import Title from "@/components/Title";
