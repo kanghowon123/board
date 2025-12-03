@@ -39,6 +39,9 @@ export default function Footer() {
             <Link href={"/board"}>게시판</Link>
           </li>
           <li>
+            <Link href={"/chart"}>Chart</Link>
+          </li>
+          <li>
             <Link href={"#"}>제작 설명</Link>
           </li>
         </ul>

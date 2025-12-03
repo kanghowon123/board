@@ -16,6 +16,9 @@ export default function Header() {
               <Link href={"/board"}>게시판</Link>
             </li>
             <li>
+              <Link href={"/chart"}>Chart</Link>
+            </li>
+            <li>
               <Link href={"/description"}>제작 설명</Link>
             </li>
           </ul>
