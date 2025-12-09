@@ -1,5 +1,3 @@
-export const revalidate = 0;
-
 import Actions from "@/components/TodoActions";
 import { supabase } from "../supabaseClient";
 
