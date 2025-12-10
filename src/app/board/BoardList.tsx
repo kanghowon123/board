@@ -1,25 +1,14 @@
-import { supabase } from "../supabaseClient";
-import Swal from "sweetalert2";
+import { getAllBoards } from "@/services/BoardService";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/app/uitils/dateForatter";
 
 export default async function BoardList() {
-  const { data: boards, error } = await supabase
-    .from("board")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const boards = await getAllBoards();
 
-  if (error) {
-    console.error(error);
-
-    Swal.fire({
-      title: "Error!",
-      text: "게시판 리스트 불러오는 중 에러",
-      icon: "error",
-      confirmButtonText: "확인",
-    });
-    return;
+  if (!boards) {
+    return <div>게시물 목록 조회 실패</div>;
   }
 
   return (
@@ -32,7 +21,7 @@ export default async function BoardList() {
         {boards?.map((board) => (
           <li key={board.id} className="grid grid-cols-2 p-2 border-b">
             <Link href={`/board/${board.id}`}>{board.title}</Link>
-            <p>{board.created_at}</p>
+            <p>{formatDate(board.created_at)}</p>
           </li>
         ))}
         <li className="ml-0">

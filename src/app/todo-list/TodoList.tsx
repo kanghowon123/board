@@ -1,18 +1,10 @@
 import Actions from "@/components/TodoActions";
-import { supabase } from "../supabaseClient";
+import { getAllTodos } from "@/services/TodoService";
 
 export default async function TodoList() {
-  const { data, error } = await supabase
-    .from("todo")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const todos = await getAllTodos();
 
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  if (data.length === 0) {
+  if (todos.length === 0) {
     return (
       <div className="text-center pt-20 pb-10 text-[20px]">
         <p>작성된 리스트가 없습니다.</p>
@@ -25,7 +17,7 @@ export default async function TodoList() {
   return (
     <div>
       <ul className="pt-10">
-        {data.map((todo) => (
+        {todos.map((todo) => (
           <li key={todo.id} className="py-3">
             <div className="flex justify-between items-center">
               <p>{todo.title}</p>

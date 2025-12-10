@@ -1,18 +1,23 @@
 "use client";
-
-import { supabase } from "@/app/supabaseClient";
+import { getBoardById } from "@/services/BoardService";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 
-export default function BoardActions({ boardId }: { boardId: string }) {
+export default function BoardActions({ boardId }: { boardId: number }) {
   const router = useRouter();
   const Swal = require("sweetalert2");
   const handleDelete = async () => {
-    const { error } = await supabase.from("board").delete().eq("id", boardId);
-
-    if (error) {
-      console.log(error);
+    const board = await getBoardById(boardId);
+    if (!board) {
+      Swal.fire({
+        title: "Error!",
+        text: "삭제중 에러 발생",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+      return;
     }
+
     Swal.fire({
       title: "성공!",
       text: "삭제 완료",

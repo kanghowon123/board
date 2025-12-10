@@ -3,16 +3,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import MDEditor from "@uiw/react-md-editor";
 
-import { supabase } from "@/app/supabaseClient";
+import { getBoardById } from "@/services/BoardService";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useSaveShortCut from "@/app/hooks/useSaveShortCut";
 
 export default function EditBtn({
   boardId,
   editTitle,
   editContent,
 }: {
-  boardId: string;
+  boardId: number;
   editTitle: string;
   editContent: string;
 }) {
@@ -22,16 +23,11 @@ export default function EditBtn({
   const Swal = require("sweetalert2");
 
   const handleEdit = async () => {
-    const { error } = await supabase
-      .from("board")
-      .update({ title, content })
-      .eq("id", boardId);
-
-    if (error) {
-      console.log(error);
+    const board = await getBoardById(boardId);
+    if (!board) {
       Swal.fire({
         title: "Error!",
-        text: "추가중 에러 발생",
+        text: "수정중 에러 발생",
         icon: "error",
         confirmButtonText: "확인",
       });
@@ -46,6 +42,8 @@ export default function EditBtn({
     });
     router.push("/board");
   };
+
+  useSaveShortCut(handleEdit, title, content);
   return (
     <div className="max-w-7xl mx-auto py-20">
       <Input value={title} onChange={(e) => setTitle(e.target.value)} />

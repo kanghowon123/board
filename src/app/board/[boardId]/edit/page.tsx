@@ -1,23 +1,18 @@
-import { supabase } from "@/app/supabaseClient";
+import { getBoardById } from "@/services/BoardService";
 import EditBtn from "./EditBtn";
 
 export default async function EditPage({
   params,
 }: {
-  params: Promise<{ boardId: string }>;
+  params: Promise<{ boardId: number }>;
 }) {
   const { boardId } = await params;
+  const board = await getBoardById(boardId);
 
-  const { data: board, error } = await supabase
-    .from("board")
-    .select("*")
-    .eq("id", boardId)
-    .single();
-
-  if (error) {
-    console.log(error);
-    return;
+  if (!board) {
+    return <div>게시글을 찾을 수 없습니다</div>;
   }
+
   return (
     <div>
       <EditBtn

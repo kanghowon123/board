@@ -3,10 +3,10 @@
 import { supabase } from "@/app/supabaseClient";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import useSaveShortCut from "@/app/hooks/useSaveShortCut";
 
 export default function AddTodo() {
   const router = useRouter();
@@ -14,11 +14,11 @@ export default function AddTodo() {
   const Swal = require("sweetalert2");
 
   const handleAdd = async () => {
-    const { error } = await supabase.from("todo").insert({ title });
-
     if (!title.trim()) {
       return;
     }
+
+    const { error } = await supabase.from("todo").insert({ title });
 
     if (error) {
       console.error(error);
@@ -31,10 +31,11 @@ export default function AddTodo() {
       icon: "success",
       confirmButtonText: "확인",
     });
-    // alert("추가 완료");
     setTitle("");
     router.push("/todo-list");
   };
+
+  useSaveShortCut(handleAdd, title);
   return (
     <div>
       <div className="flex gap-5">

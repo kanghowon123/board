@@ -2,18 +2,18 @@
 import { supabase } from "@/app/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Swal from "sweetalert2";
 
 import { Input } from "./ui/input";
 import { FaEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa";
+import useSaveShortCut from "@/app/hooks/useSaveShortCut";
 
 export default function Actions({
   todoId,
   todoTitle,
 }: {
-  todoId: string;
+  todoId: number;
   todoTitle: string;
 }) {
   const [isEdit, setIsEdit] = useState(false);
@@ -42,7 +42,6 @@ export default function Actions({
         icon: "error",
         confirmButtonText: "확인",
       });
-      // alert("수정 중 에러 발생");
       return;
     }
 
@@ -52,11 +51,12 @@ export default function Actions({
       icon: "success",
       confirmButtonText: "Cool",
     });
-    // alert("수정 완료");
     setIsEdit(false);
 
     router.refresh();
   };
+
+  useSaveShortCut(handleEdit, editTitle);
 
   // 삭제버튼
   const handleDelete = async () => {
