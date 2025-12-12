@@ -1,4 +1,4 @@
-import { getBoardById } from "@/services/BoardService";
+import { getBoardById } from "@/app/actions/board";
 
 import { formatDate } from "@/app/uitils/dateForatter";
 import MarkdownViewer from "@/components/MarkdownViewer";
@@ -9,10 +9,13 @@ import BoardActions from "@/components/BoardActions";
 export default async function BoardItemPage({
   params,
 }: {
-  params: Promise<{ boardId: number }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { boardId } = await params;
-  const board = await getBoardById(boardId);
+  const { id } = await params;
+
+  const paramId = parseInt(id, 10);
+
+  const board = await getBoardById(paramId);
 
   if (!board) {
     return <div>게시글을 찾을 수 없습니다</div>;
@@ -32,7 +35,7 @@ export default async function BoardItemPage({
         <Button>
           <Link href={`/board/${board.id}/edit`}>수정</Link>
         </Button>
-        <BoardActions boardId={board.id} />
+        <BoardActions id={board.id} />
         <Button>
           <Link href={`/board`}>목록으로</Link>
         </Button>

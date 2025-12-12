@@ -1,4 +1,4 @@
-import { getAllBoards } from "@/services/BoardService";
+import { getAllBoards } from "@/app/actions/board";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export default async function BoardList() {
         ))}
         <li className="ml-0">
           <Button>
-            <Link href={"/board/add-board"}>글쓰기</Link>
+            <Link href={"/board/write"}>글쓰기</Link>
           </Button>
         </li>
       </ul>

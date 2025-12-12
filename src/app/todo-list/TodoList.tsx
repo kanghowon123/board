@@ -1,5 +1,5 @@
 import Actions from "@/components/TodoActions";
-import { getAllTodos } from "@/services/TodoService";
+import { getAllTodos } from "@/app/actions/todo";
 
 export default async function TodoList() {
   const todos = await getAllTodos();

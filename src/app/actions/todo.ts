@@ -1,8 +1,9 @@
 import { Todo } from "@/app/types/Todo";
-import { supabase } from "../app/supabaseClient";
+import { createClient } from "@/lib/supabase/server";
 
 // 모든 투두 가져오기
 export async function getAllTodos(): Promise<Todo[]> {
+  const supabase = await createClient();
   const { data: todos, error } = await supabase
     .from("todo")
     .select("*")

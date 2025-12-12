@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/app/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +14,7 @@ export default function AddTodo() {
   const Swal = require("sweetalert2");
 
   const handleAdd = async () => {
+    const supabase = createClient();
     if (!title.trim()) {
       return;
     }

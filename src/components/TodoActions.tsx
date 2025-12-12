@@ -1,5 +1,5 @@
 "use client";
-import { supabase } from "@/app/supabaseClient";
+import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -16,6 +16,8 @@ export default function Actions({
   todoId: number;
   todoTitle: string;
 }) {
+  const supabase = createClient();
+
   const [isEdit, setIsEdit] = useState(false);
   const [editTitle, setEditTitle] = useState(todoTitle || "");
   const router = useRouter();
