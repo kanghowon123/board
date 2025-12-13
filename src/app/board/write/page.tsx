@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import useSaveShortCut from "@/app/hooks/useSaveShortCut";
-import { createClient } from "@/lib/supabase/client";
 
 import Title from "@/components/Title";
 import { IMAGE } from "@/app/constants/images";
@@ -13,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { addBoard } from "@/app/actions/board";
 
 export default function page() {
-  const supabase = createClient();
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [isPending, startTransition] = useTransition(); //Next.js/React에서 비동기 업데이트가 UI를 멈추지 않게 하는 기능.
@@ -90,6 +88,7 @@ export default function page() {
               onChange={(e) => setContent(e || "")}
             />
             <Input type="hidden" name="content" value={content} />
+            <Input type="file" />
             <Button disabled={isPending}>
               {isPending ? "추가중..." : "추가"}
             </Button>

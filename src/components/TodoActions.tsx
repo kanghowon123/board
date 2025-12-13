@@ -1,113 +1,90 @@
 "use client";
-import { createClient } from "@/lib/supabase/client";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import { Input } from "./ui/input";
-import { FaEdit } from "react-icons/fa";
-import { FaTrashAlt } from "react-icons/fa";
-import { FaCheck } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaCheck } from "react-icons/fa";
 import useSaveShortCut from "@/app/hooks/useSaveShortCut";
+import { editTodo, deleteTodo } from "@/app/actions/todo";
 
-export default function Actions({
+export default function TodoItem({
   todoId,
   todoTitle,
 }: {
   todoId: number;
   todoTitle: string;
 }) {
-  const supabase = createClient();
-
   const [isEdit, setIsEdit] = useState(false);
-  const [editTitle, setEditTitle] = useState(todoTitle || "");
+  const [editTitle, setEditTitle] = useState(todoTitle);
   const router = useRouter();
   const Swal = require("sweetalert2");
 
-  // 수정 오픈 버튼
-  const handleEditOpen = () => {
-    setIsEdit(true);
-  };
+  const handleEditOpen = () => setIsEdit(true);
 
-  // 수정 버튼
   const handleEdit = async () => {
-    const { error } = await supabase
-      .from("todo")
-      .update({ title: editTitle })
-      .eq("id", todoId)
-      .select();
+    const formData = new FormData();
+    formData.append("id", String(todoId));
+    formData.append("title", editTitle);
 
-    if (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Error!",
-        text: "수정 중 에러 발생",
-        icon: "error",
-        confirmButtonText: "확인",
-      });
+    const { success, error } = await editTodo(formData);
+
+    if (!success) {
+      Swal.fire({ title: "Error!", text: error, icon: "error" });
       return;
     }
 
-    Swal.fire({
-      title: "성공!",
-      text: "수정 완료",
-      icon: "success",
-      confirmButtonText: "Cool",
-    });
+    Swal.fire({ title: "성공!", text: "수정 완료", icon: "success" });
     setIsEdit(false);
-
-    router.refresh();
+    router.push("/todo-list");
   };
 
   useSaveShortCut(handleEdit, editTitle);
 
-  // 삭제버튼
   const handleDelete = async () => {
-    const { error } = await supabase.from("todo").delete().eq("id", todoId);
+    const formData = new FormData();
+    formData.append("id", String(todoId));
 
-    if (error) {
-      console.error(error);
-      Swal.fire({
-        title: "Error!",
-        text: "삭제 중 에러 발생",
-        icon: "error",
-        confirmButtonText: "확인",
-      });
-      // alert("삭제 중 에러 발생");
+    const { success, error } = await deleteTodo(formData);
+
+    if (!success) {
+      Swal.fire({ title: "Error!", text: error, icon: "error" });
+      return;
     }
 
-    Swal.fire({
-      title: "성공!",
-      text: "삭제 완료",
-      icon: "success",
-      confirmButtonText: "확인",
-    });
-    // alert("삭제");
+    Swal.fire({ title: "성공!", text: "삭제 완료", icon: "success" });
     router.push("/todo-list");
   };
 
   return (
-    <div>
-      <div className="flex gap-3">
-        {isEdit ? (
-          <>
-            <Input
-              type="text"
-              value={editTitle ?? ""}
-              onChange={(e) => setEditTitle(e.target.value)}
-            />
+    <div className="flex justify-between gap-3 items-center">
+      {isEdit ? (
+        <>
+          <Input
+            value={editTitle}
+            onChange={(e) => setEditTitle(e.target.value)}
+          />
+          <div className="flex gap-2">
             <button onClick={handleEdit}>
               <FaCheck className="text-green-500 w-[30px] h-[30px]" />
             </button>
-          </>
-        ) : (
-          <button onClick={handleEditOpen}>
-            <FaEdit className="text-green-500 w-[30px] h-[30px]" />
-          </button>
-        )}
-        <button onClick={handleDelete}>
-          <FaTrashAlt className="text-red-500 w-[30px] h-[30px]" />
-        </button>
-      </div>
+            <button onClick={handleDelete}>
+              <FaTrashAlt className="text-red-500 w-[30px] h-[30px]" />
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p>{todoTitle}</p>
+          <div className="flex gap-2">
+            <button onClick={handleEditOpen}>
+              <FaEdit className="text-green-500 w-[30px] h-[30px]" />
+            </button>
+            <button onClick={handleDelete}>
+              <FaTrashAlt className="text-red-500 w-[30px] h-[30px]" />
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

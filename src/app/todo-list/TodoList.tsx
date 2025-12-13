@@ -1,4 +1,4 @@
-import Actions from "@/components/TodoActions";
+import TodoActions from "@/components/TodoActions";
 import { getAllTodos } from "@/app/actions/todo";
 
 export default async function TodoList() {
@@ -18,12 +18,10 @@ export default async function TodoList() {
     <div>
       <ul className="pt-10">
         {todos.map((todo) => (
-          <li key={todo.id} className="py-3">
-            <div className="flex justify-between items-center">
-              <p>{todo.title}</p>
-              <Actions todoId={todo.id} todoTitle={todo.title} />
+          <li key={todo.id} className="py-3 border-b">
+            <div>
+              <TodoActions todoId={todo.id} todoTitle={todo.title} />
             </div>
-            <hr />
           </li>
         ))}
       </ul>
