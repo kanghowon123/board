@@ -1,10 +1,9 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Input } from "./ui/input";
 import { FaEdit, FaTrashAlt, FaCheck } from "react-icons/fa";
-import useSaveShortCut from "@/app/hooks/useSaveShortCut";
 import { editTodo, deleteTodo } from "@/app/actions/todo";
 
 export default function TodoItem({
@@ -16,43 +15,47 @@ export default function TodoItem({
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const [editTitle, setEditTitle] = useState(todoTitle);
+  const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
   const Swal = require("sweetalert2");
 
   const handleEditOpen = () => setIsEdit(true);
 
-  const handleEdit = async () => {
-    const formData = new FormData();
-    formData.append("id", String(todoId));
-    formData.append("title", editTitle);
+  const handleEdit = () => {
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append("id", String(todoId));
+      formData.append("title", editTitle);
 
-    const { success, error } = await editTodo(formData);
+      const { success, error } = await editTodo(formData);
 
-    if (!success) {
-      Swal.fire({ title: "Error!", text: error, icon: "error" });
-      return;
-    }
+      if (!success) {
+        Swal.fire({ title: "Error!", text: error, icon: "error" });
+        return;
+      }
 
-    Swal.fire({ title: "성공!", text: "수정 완료", icon: "success" });
-    setIsEdit(false);
-    router.push("/todo-list");
+      Swal.fire({ title: "성공!", text: "수정 완료", icon: "success" });
+      setIsEdit(false);
+      router.push("/todo-list");
+    });
   };
 
-  useSaveShortCut(handleEdit, editTitle);
-
   const handleDelete = async () => {
-    const formData = new FormData();
-    formData.append("id", String(todoId));
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append("id", String(todoId));
 
-    const { success, error } = await deleteTodo(formData);
+      const { success, error } = await deleteTodo(formData);
 
-    if (!success) {
-      Swal.fire({ title: "Error!", text: error, icon: "error" });
-      return;
-    }
+      if (!success) {
+        Swal.fire({ title: "Error!", text: error, icon: "error" });
+        return;
+      }
 
-    Swal.fire({ title: "성공!", text: "삭제 완료", icon: "success" });
-    router.push("/todo-list");
+      Swal.fire({ title: "성공!", text: "삭제 완료", icon: "success" });
+      router.push("/todo-list");
+    });
   };
 
   return (
@@ -62,6 +65,7 @@ export default function TodoItem({
           <Input
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
+            disabled={isPending}
           />
           <div className="flex gap-2">
             <button onClick={handleEdit}>
