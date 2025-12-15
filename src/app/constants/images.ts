@@ -8,6 +8,8 @@ import description1 from "@/app/assets/images/description1.png";
 
 import board1 from "@/app/assets/images/board1.png";
 
+import household1 from "@/app/assets/images/household1.jpg";
+
 export const IMAGE = {
   main1img,
   main2img,
@@ -15,4 +17,5 @@ export const IMAGE = {
   todo1img,
   description1,
   board1,
+  household1,
 };

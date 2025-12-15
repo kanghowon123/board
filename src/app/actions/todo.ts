@@ -93,7 +93,7 @@ export async function editTodo(formData: FormData) {
 }
 
 // 투두 삭제
-export const deleteTodo = async (formData: FormData) => {
+export async function deleteTodo(formData: FormData) {
   const supabase = await createClient();
   const id = Number(formData.get("id"));
 
@@ -110,4 +110,4 @@ export const deleteTodo = async (formData: FormData) => {
   return {
     success: true,
   };
-};
+}

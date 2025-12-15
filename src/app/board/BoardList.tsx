@@ -13,7 +13,12 @@ export default async function BoardList() {
 
   return (
     <div className="w-7xl mx-auto py-20">
-      <ul>
+      <ul className="flex flex-col">
+        <li className="ml-auto">
+          <Button>
+            <Link href={"/board/write"}>글쓰기</Link>
+          </Button>
+        </li>
         <li className="grid grid-cols-2 p-2 border-b font-bold">
           <p>제목</p>
           <p>작성일</p>
@@ -24,11 +29,6 @@ export default async function BoardList() {
             <p>{formatDate(board.created_at)}</p>
           </li>
         ))}
-        <li className="ml-0">
-          <Button>
-            <Link href={"/board/write"}>글쓰기</Link>
-          </Button>
-        </li>
       </ul>
     </div>
   );

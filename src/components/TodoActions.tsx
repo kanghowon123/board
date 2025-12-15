@@ -42,6 +42,20 @@ export default function TodoItem({
   };
 
   const handleDelete = async () => {
+    const result = await Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      text: "삭제 후에는 복구할 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
     startTransition(async () => {
       const formData = new FormData();
       formData.append("id", String(todoId));

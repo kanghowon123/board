@@ -1,5 +1,12 @@
 import { IMAGE } from "@/app/constants/images";
-import { MainImages } from "./types";
+import { MenuList, MainImages } from "./types";
+
+export const MENU_LIST: MenuList[] = [
+  { menu: "TodoList", href: "/todo-list" },
+  { menu: "게시판", href: "/board" },
+  { menu: "가계부", href: "/household" },
+  { menu: "제작 설명", href: "/description" },
+];
 
 export const MAIN_IMAGES: MainImages[] = [
   {

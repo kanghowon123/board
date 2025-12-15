@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"; // 이미지 올리기위해서 추가함
 import { cookies } from "next/headers";
 
 export async function createClient() {
@@ -27,3 +28,11 @@ export async function createClient() {
     }
   );
 }
+
+// 이미지 올리기위해서 추가함
+export const createServiceRoleClient = () => {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!, // Supabase 프로젝트 URL
+    process.env.SUPABASE_SERVICE_ROLE_KEY! // 서버 전용 Service Role 키
+  );
+};

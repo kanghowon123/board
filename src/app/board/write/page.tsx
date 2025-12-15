@@ -14,6 +14,7 @@ import { addBoard } from "@/app/actions/board";
 export default function page() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition(); //Next.js/React에서 비동기 업데이트가 UI를 멈추지 않게 하는 기능.
 
   const Swal = require("sweetalert2");
@@ -34,13 +35,17 @@ export default function page() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
+      if (image) {
+        formData.append("image", image);
+      }
 
       const { success, data } = await addBoard(formData);
 
-      setTitle("");
-      setContent("");
-
       if (success) {
+        setTitle("");
+        setContent("");
+        setImage(null);
+
         Swal.fire({
           title: "성공!",
           text: "게시글 작성 완료",
@@ -88,7 +93,14 @@ export default function page() {
               onChange={(e) => setContent(e || "")}
             />
             <Input type="hidden" name="content" value={content} />
-            <Input type="file" />
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setImage(file);
+              }}
+            />
             <Button disabled={isPending}>
               {isPending ? "추가중..." : "추가"}
             </Button>
