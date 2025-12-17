@@ -7,6 +7,7 @@ import { formatDate } from "@/app/uitils/dateForatter";
 
 export default async function BoardList() {
   const boards = await getAllBoards();
+
   if (!boards) {
     return <div>게시물 목록 조회 실패</div>;
   }

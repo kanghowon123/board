@@ -4,4 +4,5 @@ export interface Board {
   title: string;
   content: string;
   thumbnail_url: string | null;
+  board_url: string | null;
 }

@@ -1,6 +1,6 @@
 "use server";
 
-import { Todo } from "@/app/types/Todo";
+import { Todo } from "../types/Todo";
 import { createClient } from "@/lib/supabase/server";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 

@@ -18,10 +18,20 @@ export default function ThumbnailUpload({
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB (지피티 추가)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // 사용자가 선택한 파일 목록중 첫번째를 file에 담음
     const file = e.target.files?.[0];
+
     // console.log(file);
+    if (!file) return;
+
+    // 5MB 이상이면 업로드 금지(지피티 추가)
+    if (file.size > MAX_FILE_SIZE) {
+      alert("이미지 파일은 5MB 이하만 업로드 가능합니다.");
+      e.target.value = ""; // input 초기화
+      return;
+    }
 
     if (preview) {
       URL.revokeObjectURL(preview);
@@ -89,7 +99,7 @@ export default function ThumbnailUpload({
             className="hidden"
             onChange={handleFileChange}
           />
-          <p className="text-sm text-gray-500">JPG, PNG, GIF(최대 5 MB)</p>
+          <p className="text-sm text-gray-500">JPG, PNG, GIF(최대 1 MB)</p>
         </div>
       )}
     </div>

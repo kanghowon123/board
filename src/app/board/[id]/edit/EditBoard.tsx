@@ -6,7 +6,7 @@ import MDEditor from "@uiw/react-md-editor";
 import useSaveShortCut from "@/app/hooks/useSaveShortCut";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Board } from "@/app/types/Board";
+import { Board } from "@/app/types/board";
 import { editBoard } from "@/app/actions/board";
 
 export default function EditBoard({ board }: { board: Board }) {

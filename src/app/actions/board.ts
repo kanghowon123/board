@@ -1,7 +1,7 @@
 "use server"; // 이 파일은 서버 액션 파일입니다.
 
 import { createClient } from "@/lib/supabase/server";
-import { Board } from "@/app/types/Board";
+import { Board } from "../types/Board";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { nanoid } from "nanoid";
 
@@ -48,6 +48,7 @@ export async function addBoard(formData: FormData) {
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
   const thumbnail = formData.get("thumbnail_url") as File | string | null;
+  const boardImage = formData.get("board_url") as File | null;
 
   if (!title?.trim() || !content?.trim()) {
     return { success: false, error: "제목과 내용을 입력해주세요" };
@@ -82,9 +83,39 @@ export async function addBoard(formData: FormData) {
     thumbnailUrl = null; // 이미지를 넣지 않으면 null을 넣게끔 구현
   }
 
+  let boardImageUrl: string | null = null;
+  if (boardImage instanceof File) {
+    const fileExt = boardImage.name.split(".").pop();
+    const fileName = `${nanoid()}.${fileExt}`;
+    const filePath = `boards/${fileName}`;
+
+    const { error: uploadImageError } = await supabase.storage
+      .from("boards")
+      .upload(filePath, boardImage);
+
+    if (uploadImageError) {
+      console.log("이미지 업로드 실패", uploadImageError);
+      return { success: false, error: "이미지 업로드 실패" };
+    }
+
+    const { data } = supabase.storage.from("boards").getPublicUrl(filePath);
+
+    if (!data) {
+      console.log("이미지 URL 생성 실패");
+      return { success: false, error: "이미지 URL 생성 실패" };
+    }
+
+    boardImageUrl = data.publicUrl;
+  }
+
   const { data, error } = await supabase
     .from("board")
-    .insert({ title, content, thumbnail_url: thumbnailUrl })
+    .insert({
+      title,
+      content,
+      thumbnail_url: thumbnailUrl,
+      board_url: boardImageUrl,
+    })
     .select("*")
     .single();
 
