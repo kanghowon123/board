@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { FaEdit, FaTrashAlt, FaCheck } from "react-icons/fa";
 import { editTodo, deleteTodo } from "@/app/actions/todo";
 
