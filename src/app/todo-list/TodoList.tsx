@@ -1,4 +1,4 @@
-import TodoActions from "@/components/TodoActions";
+import TodoActions from "@/app/components/Todos/TodoActions";
 import { getAllTodos } from "@/app/actions/todo";
 
 export default async function TodoList() {
