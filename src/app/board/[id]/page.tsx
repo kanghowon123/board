@@ -31,10 +31,10 @@ export default async function BoardItemPage({
       <p className="font-bold text-[30px] py-5">{board.title}</p>
 
       <div className="border p-4">
-        {board.thumbnail && (
+        {board.thumbnail_url && (
           <div className="py-5">
             <Image
-              src={board.thumbnail}
+              src={board.thumbnail_url}
               alt={board.title}
               width={800} // 원하는 가로 크기
               height={600} // 원하는 세로 크기
