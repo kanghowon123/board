@@ -1,6 +1,6 @@
 import Title from "@/components/Title";
 import { IMAGE } from "@/app/constants/images";
-import BoardList from "./BoardList";
+import BoardList from "../components/boards/BoardList";
 
 export default function BoardPage() {
   return (

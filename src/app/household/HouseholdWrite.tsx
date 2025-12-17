@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 
 export default function HouseholdWrite() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCheck, setIsCheck] = useState(false);
   const [date, setDate] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
   const [classification, setClassification] = useState<string>("");
@@ -22,10 +21,6 @@ export default function HouseholdWrite() {
 
   const handlePlusBtn = () => {
     setIsOpen((prev) => !prev);
-  };
-
-  const handleCheckBtn = () => {
-    setIsCheck((prev) => !prev);
   };
 
   const submitIncome = async () => {

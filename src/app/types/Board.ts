@@ -3,5 +3,5 @@ export interface Board {
   created_at: string;
   title: string;
   content: string;
-  image?: string | null;
+  thumbnail_url: string | null;
 }

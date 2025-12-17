@@ -1,3 +1,4 @@
+import HouseHoldCheckBox from "@/app/components/households/HouseHoldCheckBox";
 import { getAllHousehold } from "../actions/household";
 
 export default async function HouseholdList() {
@@ -12,24 +13,18 @@ export default async function HouseholdList() {
   }
   return (
     <div>
-      <ul className="w-full bg-white shadow-2xl rounded-2xl">
-        <li className="grid grid-cols-4 text-center ">
+      <div className="w-full bg-white shadow-2xl rounded-2xl">
+        <div className="grid grid-cols-4 text-center ">
           <p className="py-3 border-b-2 border-red-500">전체</p>
           <p className="py-3">수입</p>
           <p className="py-3">지출</p>
           <p className="py-3">이체</p>
-        </li>
-        <li className="grid grid-cols-7 py-3 border-b-2 border-t-2">
-          <input type="checkbox" />
-          <p>날짜</p>
-          <p>자산</p>
-          <p>분류</p>
-          <p>금액</p>
-          <p>내용</p>
-          <p>메모</p>
-        </li>
+        </div>
+
+        <HouseHoldCheckBox />
+
         {households.map((item) => (
-          <li key={item.id} className="grid grid-cols-7 py-3 border-b">
+          <div key={item.id} className="grid grid-cols-7 py-3 border-b">
             <input type="checkbox" />
             <p>{item.date}</p>
             <p>{Number(item.amount ?? 0).toLocaleString()} 원</p>
@@ -37,9 +32,9 @@ export default async function HouseholdList() {
             <p>{item.property}</p>
             <p>{item.content}</p>
             <p>{item.memo}</p>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

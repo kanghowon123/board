@@ -2,9 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { Board } from "@/app/types/Board";
-// import { uploadImage } from "@/lib/uploadImage";
-import { uploadFile } from "@/lib/uploadImage";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
+import { nanoid } from "nanoid";
 
 // 보드 리스트
 export async function getAllBoards(): Promise<Board[] | null> {
@@ -44,47 +43,48 @@ export async function getBoardById(id: number): Promise<Board | null> {
 
 // 게시물 작성
 export async function addBoard(formData: FormData) {
-  noStore();
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
+  const thumbnail = formData.get("thumbnail_url") as File | string | null;
 
   if (!title?.trim() || !content?.trim()) {
     return { success: false, error: "제목과 내용을 입력해주세요" };
   }
 
-  // 지피티가 짜준 문제 있는 코드
-  // const imageFile =
-  //   formData.get("image") instanceof File
-  //     ? (formData.get("image") as File)
-  //     : null;
+  let thumbnailUrl: string | null = null;
+  if (thumbnail && thumbnail instanceof File) {
+    const fileExt = thumbnail.name.split(".").pop();
+    const fileName = `${nanoid()}.${fileExt}`;
+    const filePath = `boards/${fileName}`; // 버킷에 있는 파일 경로를 입력
 
-  // let imageUrl: string | null = null;
-  // if (imageFile && imageFile.size > 0) {
-  //   imageUrl = await uploadImage(imageFile);
-  // }
+    const { error: uploadError } = await supabase.storage
+      .from("boards")
+      .upload(filePath, thumbnail);
 
-  // 참고 후 수정
-  const imageFile =
-    formData.get("image") instanceof File
-      ? (formData.get("image") as File)
-      : null;
-
-  let imageUrl: string | null = null;
-  if (imageFile && imageFile.size > 0) {
-    const result = await uploadFile(imageFile); // uploadFile은 객체 반환
-    if (result.success && result.data) {
-      imageUrl = result.data.publicUrl; // path 대신 publicUrl 사용
-    } else {
-      imageUrl = null; // 실패 시 null
-      console.error(result.error);
+    if (uploadError) {
+      console.log("이미지 업로드 실패", uploadError);
+      return { success: false, error: "이미지 업로드 실패" };
     }
+
+    const { data } = supabase.storage.from("boards").getPublicUrl(filePath);
+
+    if (!data) {
+      console.log("이미지 URL 생성 실패");
+      return { success: false, error: "이미지 URL 생성 실패" };
+    }
+
+    thumbnailUrl = data.publicUrl;
+  }
+
+  if (!thumbnailUrl) {
+    thumbnailUrl = null; // 이미지를 넣지 않으면 null을 넣게끔 구현
   }
 
   const { data, error } = await supabase
     .from("board")
-    .insert({ title, content, image: imageUrl })
+    .insert({ title, content, thumbnail_url: thumbnailUrl })
     .select("*")
     .single();
 
@@ -92,7 +92,6 @@ export async function addBoard(formData: FormData) {
     console.error("게시물 작성 실패", error);
     return { success: false, error: "게시물 작성 실패" };
   }
-
   revalidatePath("/board");
 
   return { success: true, data };

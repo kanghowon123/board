@@ -5,7 +5,7 @@ import MarkdownViewer from "@/components/MarkdownViewer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import BoardActions from "@/components/BoardActions";
+import BoardActions from "@/app/components/boards/BoardActions";
 
 export default async function BoardItemPage({
   params,
@@ -31,10 +31,10 @@ export default async function BoardItemPage({
       <p className="font-bold text-[30px] py-5">{board.title}</p>
 
       <div className="border p-4">
-        {board.image && (
+        {board.thumbnail && (
           <div className="py-5">
             <Image
-              src={board.image}
+              src={board.thumbnail}
               alt={board.title}
               width={800} // 원하는 가로 크기
               height={600} // 원하는 세로 크기
