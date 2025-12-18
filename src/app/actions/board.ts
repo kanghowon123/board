@@ -1,7 +1,7 @@
 "use server"; // 이 파일은 서버 액션 파일입니다.
 
 import { createClient } from "@/lib/supabase/server";
-import { Board } from "../types/Board";
+import { Board } from "../types/board";
 import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import { nanoid } from "nanoid";
 

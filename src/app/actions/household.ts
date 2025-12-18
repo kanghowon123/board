@@ -1,6 +1,6 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
-import { Household } from "../types/Household";
+import { Household } from "../types/household";
 
 // 리스트 불러오기
 export async function getAllHousehold(): Promise<Household[]> {
