@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { addBoard } from "@/app/actions/board";
 import ThumbnailUpload from "@/app/components/boards/ThumbnailUpload";
 
+import { createClient } from "@/lib/supabase/client";
+
 export default function page() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -40,8 +42,45 @@ export default function page() {
       if (thumbnail) {
         formData.append("thumbnail_url", thumbnail);
       }
-      if (boardImage) {
-        formData.append("board_url", boardImage);
+
+      // ✅ 수정: 클라이언트에서 Supabase Storage 업로드 후 URL만 서버로 전달
+      if (boardImage instanceof File) {
+        const supabase = createClient(); // 브라우저용 클라이언트 생성
+        const fileExt = boardImage.name.split(".").pop();
+        const fileName = `${Date.now()}.${fileExt}`; // 중복 방지용
+        const filePath = `boards/${fileName}`;
+
+        // 업로드
+        const { error: uploadError } = await supabase.storage
+          .from("boards")
+          .upload(filePath, boardImage);
+
+        if (uploadError) {
+          Swal.fire({
+            title: "Error!",
+            text: "이미지 업로드 실패",
+            icon: "error",
+            confirmButtonText: "확인",
+          });
+          return;
+        }
+
+        // URL 가져오기
+        const { data } = supabase.storage.from("boards").getPublicUrl(filePath);
+
+        // ✅ 수정: publicUrl 타입 안전하게 체크
+        if (!data?.publicUrl) {
+          Swal.fire({
+            title: "Error!",
+            text: "이미지 URL 생성 실패",
+            icon: "error",
+            confirmButtonText: "확인",
+          });
+          return;
+        }
+
+        const publicUrl = data.publicUrl; // 여기서 안전하게 URL 가져오기
+        formData.append("board_url", publicUrl); // 서버로 URL만 전달
       }
 
       const { success, data } = await addBoard(formData);
