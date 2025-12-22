@@ -24,9 +24,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.variable} antialiased`}>
+      <body
+        className={`${pretendard.variable} flex flex-col min-h-screen antialiased`}
+      >
         <Header />
-        <main className="mt-20">{children}</main>
+        <main className="mt-20 flex-1">{children}</main>
         <Footer />
       </body>
     </html>

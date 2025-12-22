@@ -99,7 +99,7 @@ export default function ThumbnailUpload({
             className="hidden"
             onChange={handleFileChange}
           />
-          <p className="text-sm text-gray-500">JPG, PNG, GIF(최대 1 MB)</p>
+          <p className="text-sm text-gray-500">JPG, PNG, GIF(최대 5 MB)</p>
         </div>
       )}
     </div>

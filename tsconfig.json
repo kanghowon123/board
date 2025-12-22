@@ -29,7 +29,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "src/app/board/[id]/delete"
+    "src/app/(pages)/board/[id]/delete"
   ],
   "exclude": ["node_modules"]
 }

@@ -147,6 +147,30 @@ export async function editBoard(formData: FormData) {
 export async function deleteBoard(id: number) {
   const supabase = await createClient();
 
+  // 1️⃣ 삭제 전 게시글 정보 가져오기
+  const { data: board, error: fetchError } = await supabase
+    .from("board")
+    .select("thumbnail_url, board_url")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !board) {
+    console.error("게시물 정보 조회 실패", fetchError);
+    return { success: false, error: "게시물 정보 조회 실패" };
+  }
+
+  // 2️⃣ 썸네일 삭제
+  if (board.thumbnail_url) {
+    const thumbnailPath = board.thumbnail_url.split("/").slice(-2).join("/");
+    await supabase.storage.from("boards").remove([thumbnailPath]);
+  }
+
+  // 3️⃣ 게시판 이미지 삭제
+  if (board.board_url) {
+    const boardImagePath = board.board_url.split("/").slice(-2).join("/");
+    await supabase.storage.from("boards").remove([boardImagePath]);
+  }
+
   const { error } = await supabase.from("board").delete().eq("id", id).single();
 
   if (error) {
